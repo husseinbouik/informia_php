@@ -41,7 +41,7 @@
 
                                 <h6 class="h5 mb-0">Just Do Register.</h6>
                                 <p class="text-muted mt-2 mb-5">Sign up to learn new skills and advance your career with Informia.</p>
-                                <form action="/signup" method="post"  id="form" class="form"  >
+                                <form action="register.php" method="post"  id="form" class="form" enctype="multipart/form-data"  >
                                    
                                    <div class="form-group">
                                         <label for="firstname">First Name</label>
