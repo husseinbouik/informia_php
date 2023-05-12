@@ -4,7 +4,7 @@ CREATE TABLE Trainer(
    last_name VARCHAR(50) NOT NULL,
    email VARCHAR(50) NOT NULL UNIQUE,
    skills VARCHAR(50) NOT NULL,
-   password VARCHAR(50) NOT NULL,
+   password VARCHAR(1000) NOT NULL,
    PRIMARY KEY(trainer_id)
 );
 
@@ -35,7 +35,7 @@ CREATE TABLE Learner(
    first_name VARCHAR(50) NOT NULL,
    last_name VARCHAR(50) NOT NULL,
    email VARCHAR(50) NOT NULL UNIQUE,
-   password VARCHAR(50) NOT NULL,
+   password VARCHAR(1000) NOT NULL,
    PRIMARY KEY(learner_id)
 );
 

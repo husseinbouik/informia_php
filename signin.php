@@ -25,6 +25,15 @@
 </head>
 
 <body style="padding-top: 0px;padding-bottom: 65px;">
+<?php
+session_name('learner');
+session_start();
+require 'connect.php';
+if (isset($_SESSION['message'])) {
+   $successmessage =  $_SESSION['message'];
+  unset($_SESSION['message']);
+}
+?>
     <div id="main-wrapper" class="container">
         <div class="row justify-content-center">
             <div class="col-xl-10">
@@ -38,10 +47,12 @@
                                                     <path d="M2 3.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm.646 2.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L4.293 8 2.646 6.354a.5.5 0 0 1 0-.708zM7 6.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"></path>
                                                 </svg></span><span id="logo">Informia</span></a>
                                     </div>
-
+                                    <?php if (isset($successmessage)): ?>
+    <div class="alert alert-success mx-auto w-75 h-25 text-center"><?php echo $successmessage; ?></div>
+<?php endif; ?>
                                     <h6 class="h5 mb-0">Just Do Register.</h6>
                                     <p class="text-muted mt-2 mb-5">Sign up to learn new skills and advance your career with Informia.</p>
-                                    <form action="login.php" method="post" id="form" class="form" enctype="multipart/form-data">
+                                    <form action="login.php" method="post" id="form" class="form" enctype="multipart/form-data"> 
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Email address</label>
                                             <input type="email" class="form-control" id="Email" name="email" />

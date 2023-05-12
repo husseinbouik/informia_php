@@ -27,6 +27,30 @@
 </head>
 
 <body>
+<nav class="navbar navbar-light navbar-expand-md py-3 navbg fixed-top">
+        <div class="container"><a class="navbar-brand d-flex align-items-center" href="#"><span class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-text-indent-left" style="padding-right: 0px;margin-right: 0px;font-size: 27px;">
+                        <path d="M2 3.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm.646 2.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L4.293 8 2.646 6.354a.5.5 0 0 1 0-.708zM7 6.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"></path>
+                    </svg></span><span id="logo">Informia</span></a><a class="navbar-brand d-flex align-items-center" href="#"><span></span></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-3"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-3">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"></li>
+                    <li class="nav-item"><a class="nav-link" href="trainings.php"><i class="fa fa-th-large fa-fw"></i>Trainings</a></li>
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
+                    <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href=""><i class="fa fa-navicon fa-fw"></i><span style="color: var(--bs-navbar-active-color);">Registrations</span></a>
+                        <div class="dropdown-menu"><a class="dropdown-item" href="recents.php"><i class="fa fa-spinner fa-fw"></i>Recents</a><a class="dropdown-item" href="archive.php"><i class="fa fa-archive fa-fw"></i>Archieve</a></div>
+                    </li>
+                </ul>
+                <div class="input-group" style="width: 20%;margin-right: 42px;"><input class="bg-light form-control border-0 small" name="q"  type="text" placeholder="Search for ..."><button class="btn btn-primary py-0" type="button" style="background-color: #d190e2;border: none;"><i class="fas fa-search"></i></button></div>
+                <div class="dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small">hussein bouik</span><img class="border rounded-circle img-profile" src="assets/img/avatars/avatar5.jpeg"></a>
+                    <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a class="dropdown-item" href="profile.php"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a><a class="dropdown-item" href="#"><i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Settings</a><a class="dropdown-item" href="#"><i class="fas fa-list fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Activity log</a>
+                        <div class="dropdown-divider"></div><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
     <div class="container py-4 py-xl-5" style="margin-top: 48px;padding-bottom: 8px;margin-bottom: -46px;">
         <div class="row mb-5">
             <div class="col-md-8 col-xl-6 text-center mx-auto">
@@ -35,12 +59,40 @@
         </div>
     </div>
     <div class="d-flex flex-wrap" style="padding-left: 64px;">
+    <?php include 'class.php';
+
+// Determine the number of items to display per page
+$itemsPerPage = 8;
+
+// Get the search query from the URL parameter
+$searchQuery = isset($_GET['q']) ? $_GET['q'] : '';
+
+// Get the current page number from the URL parameter
+$pageNumber = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+
+// Get the trainings matching the search query
+$trainings = Training::searchTrainings($searchQuery);
+
+// Determine the total number of trainings
+$totalTrainings = count($trainings);
+
+// Calculate the offset and limit for the result set
+$offset = ($pageNumber - 1) * $itemsPerPage;
+$limit = $itemsPerPage;
+
+// Get only the trainings for the current page
+$currentTrainings = array_slice($trainings, $offset, $limit);
+
+// Display the trainings for the current page
+foreach ($currentTrainings as $training) {
+    ?>
         <div id="cardEntrada-2" class="p-4 text-center shadow-lg m-5 rounded-5" style="background: linear-gradient(171deg, #d190e2 0%, var(--bs-indigo) 100%), var(--bs-purple);width: 280px;">
-            <h3 class="text-white text-center pt-2">Title</h3>
-            <p class="fw-light text-white m-0">Description</p>
+            <h3 class="text-white text-center pt-2"><?php echo $training->getSubject() ?></h3>
+            <p class="fw-light text-white m-0"><?php echo $training->getDescription() ?></p>
             <hr class="text-white">
-            <div><a class="btn btn-sm animated-button victoria-one" href="detailtraining.php" style="border-color: #d190e2;">read more</a></div>
+            <div><a class="btn btn-sm animated-button victoria-one" href="detailtraining.php=?<?php echo $training->getTrainingId() ?>" style="border-color: #d190e2;">read more</a></div>
         </div>
+<?php } ?>
     </div>
     <div id="pagination" class="d-flex justify-content-center"><a class="pagination-item disabled" href="#"><img src="assets/img/icon_arrow-left.svg"><span>Previos</span></a><a class="pagination-item active" href="#">1</a><a class="pagination-item" href="#">2</a><a class="pagination-item" href="#">3</a><a class="pagination-item" href="#">...</a><a class="pagination-item" href="#"><span>Next</span><img src="assets/img/icon_arrow-right.svg"></a></div>
     <footer>
@@ -92,32 +144,24 @@
                         </svg></li>
                 </ul>
             </div>
+            <?php      
+        }
+        // Display the pagination links
+$totalPages = ceil($totalCards / $itemsPerPage);
+if ($totalPages > 1) {
+    echo '<ul class="pagination">';
+    for ($i = 1; $i <= $totalPages; $i++) {
+        if ($i == $pageNumber) {
+            echo '<li class="page-item active"><a class="page-link" href="#">' . $i . '</a></li>';
+        } else {
+            echo '<li class="page-item"><a class="page-link" href="?page=' . $i . '&q=' . $searchQuery . '">' . $i . '</a></li>';
+        }
+    }
+    echo '</ul>';
+}
+?>
         </div>
     </footer>
-    <nav class="navbar navbar-light navbar-expand-md py-3 navbg fixed-top">
-        <div class="container"><a class="navbar-brand d-flex align-items-center" href="#"><span class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-text-indent-left" style="padding-right: 0px;margin-right: 0px;font-size: 27px;">
-                        <path d="M2 3.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm.646 2.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L4.293 8 2.646 6.354a.5.5 0 0 1 0-.708zM7 6.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"></path>
-                    </svg></span><span id="logo">Informia</span></a><a class="navbar-brand d-flex align-items-center" href="#"><span></span></a><button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-3"><span class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse" id="navcol-3">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item"></li>
-                    <li class="nav-item"><a class="nav-link" href="trainings.php"><i class="fa fa-th-large fa-fw"></i>Trainings</a></li>
-                    <li class="nav-item"></li>
-                    <li class="nav-item"></li>
-                    <li class="nav-item"></li>
-                    <li class="nav-item dropdown"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href=""><i class="fa fa-navicon fa-fw"></i><span style="color: var(--bs-navbar-active-color);">Registrations</span></a>
-                        <div class="dropdown-menu"><a class="dropdown-item" href="recents.php"><i class="fa fa-spinner fa-fw"></i>Recents</a><a class="dropdown-item" href="archive.php"><i class="fa fa-archive fa-fw"></i>Archieve</a></div>
-                    </li>
-                </ul>
-                <div class="input-group" style="width: 20%;margin-right: 42px;"><input class="bg-light form-control border-0 small" type="text" placeholder="Search for ..."><button class="btn btn-primary py-0" type="button" style="background-color: #d190e2;border: none;"><i class="fas fa-search"></i></button></div>
-                <div class="dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small">hussein bouik</span><img class="border rounded-circle img-profile" src="assets/img/avatars/avatar5.jpeg"></a>
-                    <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a class="dropdown-item" href="profile.php"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a><a class="dropdown-item" href="#"><i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Settings</a><a class="dropdown-item" href="#"><i class="fas fa-list fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Activity log</a>
-                        <div class="dropdown-divider"></div><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/js/bs-init.js"></script>
     <script src="https://geodata.solutions/includes/countrystate.js"></script>

@@ -24,17 +24,21 @@
     <link rel="stylesheet" href="assets/css/sign.css">
 
 </head>
+
+<body style="padding-top: 0px;padding-bottom: 65px;">
 <?php
 session_name('learner');
 session_start();
 require 'connect.php';
-if (isset($_SESSION['error_message'])) {
+if (isset($_SESSION['email_error'])) {
   $email_error = $_SESSION['email_error'];
   unset($_SESSION['email_error']);
 }
+if (isset($_SESSION['message'])) {
+   $successmessage =  $_SESSION['message'];
+  unset($_SESSION['message']);
+}
 ?>
-
-<body style="padding-top: 0px;padding-bottom: 65px;">
     <div id="main-wrapper" class="container">
         <div class="row justify-content-center">
             <div class="col-xl-10">
@@ -48,7 +52,9 @@ if (isset($_SESSION['error_message'])) {
                                                     <path d="M2 3.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm.646 2.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L4.293 8 2.646 6.354a.5.5 0 0 1 0-.708zM7 6.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"></path>
                                                 </svg></span><span id="logo">Informia</span></a>
                                     </div>
-
+                                    <?php if (isset($email_error)): ?>
+    <div class="alert alert-danger mx-auto w-75 h-25 text-center"><?php echo $email_error; ?></div>
+<?php endif; ?> 
                                     <h6 class="h5 mb-0">Just Do Register.</h6>
                                     <p class="text-muted mt-2 mb-5">Sign up to learn new skills and advance your career with Informia.</p>
                                     <form action="register.php" method="post" id="form" class="form" enctype="multipart/form-data">
@@ -78,10 +84,9 @@ if (isset($_SESSION['error_message'])) {
                                             <input type="password" class="form-control" id="ConfirmPassword" name="ConfirmPassword" />
                                             <small>Error message</small>
                                         </div>
+
                                         <button type="submit" class="btn btn-theme" value="Register">Register</button>
-                                         <?php if (isset($email_error)): ?>
-    <div class="alert alert-danger mx-auto w-75 h-25 text-center"><?php echo $email_error; ?></div>
-<?php endif; ?> 
+
                                     </form>
                                </div>
                             </div>
