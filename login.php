@@ -14,25 +14,30 @@ if (!empty($_POST['email']) && !empty($_POST['password'])) {
 
     // check if the learner exists and the password is correct
     if ($learner && password_verify($_POST['password'], $learner['password'])) {
-
-        session_name('user');
-        // the password is correct, so set the session variables and redirect to the appropriate interface
+        // start a session and set session variables for the learner's data
+        session_name('learner');
         session_start();
         $_SESSION['learner_id'] = $learner['learner_id'];
         $_SESSION['first_name'] = $learner['first_name'];
         $_SESSION['last_name'] = $learner['last_name'];
         $_SESSION['email'] = $learner['email'];
-        header("Location:homepage.php");
+        header("Location:home.php");
+        exit;
         
     } else {
         // the learner does not exist or the password is incorrect, so display an error message
-        echo 'Invalid Email or Password';
+        $error_message = 'Invalid email or password';
+        echo  $error_message ;
+
     }
 
 } else {
-    // either the Email or Password field is empty, so display an error message
-    echo 'Please enter your Email and Password';
+    // either the email or password field is empty, so display an error message
+    $error_message = 'Please enter your email and password';
+    echo  $error_message ;
+
 }
-// Redirect to the collection home page
-// header("Location:check_email.php");
+
+// close the database connection
+$db = null;
 ?>

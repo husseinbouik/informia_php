@@ -1,5 +1,5 @@
 CREATE TABLE Trainer(
-   trainer_id INT,
+   trainer_id INT AUTO_INCREMENT,
    first_name VARCHAR(50) NOT NULL,
    last_name VARCHAR(50) NOT NULL,
    email VARCHAR(50) NOT NULL UNIQUE,
@@ -9,7 +9,7 @@ CREATE TABLE Trainer(
 );
 
 CREATE TABLE Training(
-   training_id INT,
+   training_id INT AUTO_INCREMENT,
    subject VARCHAR(50) NOT NULL,
    description VARCHAR(300) NOT NULL,
    category VARCHAR(50) NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE Training(
 );
 
 CREATE TABLE Session(
-   session_id INT,
+   session_id INT AUTO_INCREMENT,
    start_date DATE NOT NULL,
    end_date DATE NOT NULL,
    max_places INT NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE Session(
 );
 
 CREATE TABLE Learner(
-   learner_id INT,
+   learner_id INT AUTO_INCREMENT,
    first_name VARCHAR(50) NOT NULL,
    last_name VARCHAR(50) NOT NULL,
    email VARCHAR(50) NOT NULL UNIQUE,
@@ -47,10 +47,10 @@ CREATE TABLE registration(
    FOREIGN KEY(session_id) REFERENCES Session(session_id),
    FOREIGN KEY(learner_id) REFERENCES Learner(learner_id)
 );
+
 CREATE TABLE Admin(
-   admin_id INT,
+   admin_id INT AUTO_INCREMENT,
    admin_name VARCHAR(50),
    password VARCHAR(50) NOT NULL,
-   PRIMARY KEY(admin_id, admin_name)
+   PRIMARY KEY(admin_id)
 );
-

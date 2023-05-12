@@ -24,6 +24,15 @@
     <link rel="stylesheet" href="assets/css/sign.css">
 
 </head>
+<?php
+session_name('learner');
+session_start();
+require 'connect.php';
+if (isset($_SESSION['error_message'])) {
+  $email_error = $_SESSION['email_error'];
+  unset($_SESSION['email_error']);
+}
+?>
 
 <body style="padding-top: 0px;padding-bottom: 65px;">
     <div id="main-wrapper" class="container">
@@ -70,8 +79,11 @@
                                             <small>Error message</small>
                                         </div>
                                         <button type="submit" class="btn btn-theme" value="Register">Register</button>
+                                         <?php if (isset($email_error)): ?>
+    <div class="alert alert-danger mx-auto w-75 h-25 text-center"><?php echo $email_error; ?></div>
+<?php endif; ?> 
                                     </form>
-                                </div>
+                               </div>
                             </div>
                             <div class="col-lg-6 d-none d-lg-inline-block">
                                 <div class="account-block rounded-right">

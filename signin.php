@@ -44,7 +44,7 @@
                                     <form action="login.php" method="post" id="form" class="form" enctype="multipart/form-data">
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Email address</label>
-                                            <input type="email" class="form-control" id="exampleInputEmail1" name="email" />
+                                            <input type="email" class="form-control" id="Email" name="email" />
                                             <i class="fas fa-check-circle"></i>
                                             <i class="fas fa-exclamation-circle"></i>
                                             <small>Error message</small>
