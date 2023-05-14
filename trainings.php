@@ -98,7 +98,7 @@ foreach ($currentTrainings as $training) {
             <h3 class="text-white text-center pt-2"><?php echo $training->getSubject() ?></h3>
             <p class="fw-light text-white m-0"><?php echo $training->getDescription() ?></p>
             <hr class="text-white">
-            <div><a class="btn btn-sm animated-button victoria-one" href="detailtraining.php=?<?php echo $training->getTrainingId() ?>" style="border-color: #d190e2;">read more</a></div>
+            <div><a class="btn btn-sm animated-button victoria-one" href="detailtraining.php?training_id=<?php echo $training->getTrainingId() ?>" style="border-color: #d190e2;">read more</a></div>
         </div>
 <?php } ?>
     </div>
