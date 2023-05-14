@@ -51,6 +51,6 @@ CREATE TABLE registration(
 CREATE TABLE Admin(
    admin_id INT AUTO_INCREMENT,
    admin_name VARCHAR(50),
-   password VARCHAR(50) NOT NULL,
+   password VARCHAR(1000) NOT NULL,
    PRIMARY KEY(admin_id)
 );

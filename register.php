@@ -3,6 +3,8 @@ session_name('learner');
 session_start();
 
 require('connect.php');
+require('class.php');
+
 
 // define variables to hold error and success messages
 $message = "";
@@ -23,23 +25,8 @@ if (!empty($_POST['first_name'])) {
       $_SESSION['email_error'] = $email_error;
       header("Location: signup.php");
   } else {
-      // email does not exist, proceed with registration
-
-      // hash the password
-      $hashed_password = password_hash($_POST['Password'], PASSWORD_DEFAULT);
-
-      // prepare the SQL query to insert data into the Learner table
-      $stmt = $db->prepare("INSERT INTO Learner (first_name, last_name, email, password) VALUES (:first_name, :last_name, :email, :password)");
-
-      // bind the form data to the prepared statement
-      $stmt->bindParam(':first_name', $_POST['first_name']);
-      $stmt->bindParam(':last_name', $_POST['last_name']);
-      $stmt->bindParam(':email', $_POST['Email']);
-      $stmt->bindParam(':password', $hashed_password);
-
-      // execute the prepared statement
-      $stmt->execute();
-
+      $learner = new Learner($_POST['first_name'], $_POST['last_name'], $_POST['Email'], $_POST['Password']);
+      $learner->save();
       // registration successful, display a success message
       $successmessage = 'Registration successful!';
       $_SESSION['message'] = $successmessage;

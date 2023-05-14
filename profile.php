@@ -27,6 +27,27 @@
 </head>
 
 <body>
+<?php
+session_name('learner');
+session_start();
+require 'connect.php';
+if (isset($_SESSION['learner_id'])) {
+   $learner_id =  $_SESSION['learner_id'];
+  unset($_SESSION['learner_id']);
+}
+$sql = "SELECT * FROM Learner WHERE learner_id = ?";
+$stmt = $db->prepare($sql);
+$stmt->execute([$learner_id]);
+
+if ($stmt->rowCount() > 0) {
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    $first_name = $row["first_name"];
+    $last_name = $row["last_name"];
+    $email = $row["email"];
+    $password = $row["password"];
+    // Display the learner data
+}
+?>
     <nav class="navbar navbar-light navbar-expand-md py-3 navbg fixed-top">
         <div class="container"><a class="navbar-brand d-flex align-items-center" href="trainings.php"><span class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-text-indent-left" style="padding-right: 0px;margin-right: 0px;font-size: 27px;">
                         <path d="M2 3.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm.646 2.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L4.293 8 2.646 6.354a.5.5 0 0 1 0-.708zM7 6.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"></path>

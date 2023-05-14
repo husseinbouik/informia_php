@@ -1,5 +1,20 @@
 <?php
 require('connect.php');
+
+// class Sessions {
+//   public function __construct() {
+//     session_name('learner');
+//     session_start();
+//   }
+
+//   public function set($key, $value) {
+//     $_SESSION[$key] = $value;
+//   }
+
+//   public function get($key) {
+//     return isset($_SESSION[$key]) ? $_SESSION[$key] : null;
+//   }
+// }
 // Define Training class
 class Training {
     private $training_id;
@@ -121,6 +136,107 @@ class Session {
 
     public function getTrainerId() {
         return $this->trainer_id;
+    }
+}
+
+class Learner {
+    private $first_name;
+    private $last_name;
+    private $email;
+    private $password;
+    private $db;
+
+    public function get_first_name() {
+        return $this->first_name;
+    }
+
+    public function set_first_name($first_name) {
+        $this->first_name = $first_name;
+    }
+
+    public function get_last_name() {
+        return $this->last_name;
+    }
+
+    public function set_last_name($last_name) {
+        $this->last_name = $last_name;
+    }
+
+    public function get_email() {
+        return $this->email;
+    }
+
+    public function set_email($email) {
+        $this->email = $email;
+    }
+
+    public function get_password() {
+        return $this->password;
+    }
+
+    public function set_password($password) {
+        $this->password = $password;
+    }
+
+    public function connectDB() {
+        $this->db = new PDO('mysql:host=localhost;dbname=trainingcenter', 'root', '');
+    }
+
+    public function login() {
+        $this->connectDB();
+
+        if (!empty($_POST['email']) && !empty($_POST['password'])) {
+             
+            // Prepare the SQL query to insert data into the Learner table
+        $sql = 'SELECT * FROM Learner WHERE email = :email';
+        
+            // prepare the SQL query to select the learner with the given email
+            $stmt =  $this->db->prepare($sql);
+            $stmt->bindParam(':email', $_POST['email']);
+            $stmt->execute();
+            // fetch the learner's data from the database
+            $learner = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+            // check if the learner exists and the password is correct
+            if ($learner && password_verify($_POST['password'], $learner['password'])) {
+        
+                $_SESSION['learner_id'] = $learner['learner_id'];
+                $_SESSION['first_name'] = $learner['first_name'];
+                $_SESSION['last_name'] = $learner['last_name'];
+                $_SESSION['email'] = $learner['email'];
+                header("Location: Trainings.php");
+            } else {
+                // the learner does not exist or the password is incorrect, so display an error message
+                $error_message = 'Invalid email or password';
+                $_SESSION['error_message'] = $error_message; 
+                header("Location: signin.php"); 
+            }
+        } 
+        // close the database connection
+        $db = null;
+    }
+
+    public function save() {
+        $this->connectDB();
+
+        // Hash the password
+        $hashed_password = password_hash($this->password, PASSWORD_DEFAULT);
+
+        // Prepare the SQL query to insert data into the Learner table
+        $sql = 'INSERT INTO learner (first_name, last_name, email, password) VALUES (:first_name, :last_name, :email, :password)';
+
+        // Bind the form data to the prepared statement
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':first_name', $this->first_name);
+        $stmt->bindParam(':last_name', $this->last_name);
+        $stmt->bindParam(':email', $this->email);
+        $stmt->bindParam(':password', $hashed_password);
+
+        // Execute the prepared statement
+        $stmt->execute();
+
+        // Return true if the learner was saved successfully, false otherwise
+        return $stmt->rowCount() > 0;
     }
 }
 ?>

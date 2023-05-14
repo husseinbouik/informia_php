@@ -29,10 +29,16 @@
 session_name('learner');
 session_start();
 require 'connect.php';
+if (isset($_SESSION['error_message'])) {
+    $error_message = $_SESSION['error_message'];
+    unset($_SESSION['error_message']);
+  }
 if (isset($_SESSION['message'])) {
    $successmessage =  $_SESSION['message'];
   unset($_SESSION['message']);
 }
+
+
 ?>
     <div id="main-wrapper" class="container">
         <div class="row justify-content-center">
@@ -50,6 +56,9 @@ if (isset($_SESSION['message'])) {
                                     <?php if (isset($successmessage)): ?>
     <div class="alert alert-success mx-auto w-75 h-25 text-center"><?php echo $successmessage; ?></div>
 <?php endif; ?>
+<?php if (isset($error_message)): ?>
+    <div class="alert alert-danger mx-auto w-75 h-25 text-center"><?php echo $error_message; ?></div>
+    <?php endif; ?>
                                     <h6 class="h5 mb-0">Just Do Register.</h6>
                                     <p class="text-muted mt-2 mb-5">Sign up to learn new skills and advance your career with Informia.</p>
                                     <form action="login.php" method="post" id="form" class="form" enctype="multipart/form-data"> 
