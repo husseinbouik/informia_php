@@ -238,5 +238,72 @@ class Learner {
         // Return true if the learner was saved successfully, false otherwise
         return $stmt->rowCount() > 0;
     }
+    public function update($email,
+    $first_name,
+    $last_name,
+    $new_password,
+    $current_password) {
+        $this->connectDB();
+    
+        // Check if the current password is correct
+        $sql = 'SELECT password FROM learner WHERE email = :email';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $password_match = password_verify($current_password, $result['password']);
+        if (!$password_match) {
+        $false_current_password = 'The current password is incorrect';
+        $_SESSION['false_current_password'] = $false_current_password; 
+        header("Location: profile.php"); 
+
+        }else{
+            unset($_SESSION['false_current_password']);
+            $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+    
+            // Prepare the SQL query to update data in the Learner table
+            $sql = 'UPDATE learner SET first_name = :first_name, last_name = :last_name, password = :password WHERE email = :email';
+        
+            // Bind the form data to the prepared statement
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindParam(':first_name', $first_name);
+            $stmt->bindParam(':last_name', $last_name);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':password', $hashed_password);
+        
+            // Execute the prepared statement
+            $stmt->execute();
+
+            $success_update ='Your profile information has been updated successfully.';
+            $_SESSION['success_update'] = $success_update; 
+            // Return true if the learner was saved successfully, false otherwise
+            return $stmt->rowCount() > 0;
+            
+        }
+    
+        // Hash the new password
+
+    }
+    public function get_learner_by_id($learner_id) {
+        // Connect to the database
+        $this->db = new PDO('mysql:host=localhost;dbname=trainingcenter', 'root', '');
+    
+        // Prepare the SQL query to select the learner with the given ID
+        $sql = 'SELECT * FROM learner WHERE learner_id = ?';
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$learner_id]);
+    
+        // Fetch the learner's data from the database
+        $learner_data = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+        // Set the learner object's properties based on the retrieved data
+        $this->set_first_name($learner_data['first_name']);
+        $this->set_last_name($learner_data['last_name']);
+        $this->set_email($learner_data['email']);
+        $this->set_password($learner_data['password']);
+    
+        // Store the learner object in the session
+        $_SESSION['learner'] = $this;
+    }
 }
 ?>

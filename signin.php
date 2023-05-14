@@ -65,15 +65,11 @@ if (isset($_SESSION['message'])) {
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Email address</label>
                                             <input type="email" class="form-control" id="Email" name="email" />
-                                            <i class="fas fa-check-circle"></i>
-                                            <i class="fas fa-exclamation-circle"></i>
                                             <small>Error message</small>
                                         </div>
                                         <div class="form-group">
                                             <label for="Password">Password</label>
                                             <input type="password" class="form-control" id="Password" name="password" />
-                                            <i class="fas fa-check-circle"></i>
-                                            <i class="fas fa-exclamation-circle"></i>
                                             <small>Error message</small>
                                         </div>
 

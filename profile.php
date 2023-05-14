@@ -24,30 +24,41 @@
     <link rel="stylesheet" href="assets/css/Search-Input-Responsive-with-Icon.css">
     <link rel="stylesheet" href="assets/css/Search-Input-responsive.css">
     <link rel="stylesheet" href="assets/css/Signup-page-with-overlay.css">
+    <link rel="stylesheet" href="assets/css/sign.css">
 </head>
 
 <body>
-<?php
-session_name('learner');
-session_start();
-require 'connect.php';
-if (isset($_SESSION['learner_id'])) {
-   $learner_id =  $_SESSION['learner_id'];
-  unset($_SESSION['learner_id']);
-}
-$sql = "SELECT * FROM Learner WHERE learner_id = ?";
-$stmt = $db->prepare($sql);
-$stmt->execute([$learner_id]);
+    <?php
 
-if ($stmt->rowCount() > 0) {
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    $first_name = $row["first_name"];
-    $last_name = $row["last_name"];
-    $email = $row["email"];
-    $password = $row["password"];
-    // Display the learner data
-}
-?>
+    session_name('learner');
+    session_start();
+    require 'class.php';
+    require 'connect.php';
+    if (isset($_SESSION['false_current_password'])) {
+        $false_current_password = $_SESSION['false_current_password'];
+        unset($_SESSION['false_current_password']);
+      }
+      if (isset($_SESSION['success_update'])) {
+        $success_update = $_SESSION['success_update'];
+        unset($_SESSION['success_update']);
+      }
+    // Check if the learner object is stored in the session
+    if (isset($_SESSION['learner_id'])) {
+        $learner_id = $_SESSION['learner_id'];
+        $learner = new Learner();
+        $learner->get_learner_by_id($learner_id);
+
+        // Use the learner object's properties to display the learner data
+        $first_name = $learner->get_first_name();
+        $last_name = $learner->get_last_name();
+        $email = $learner->get_email();
+        $password = $learner->get_password();
+        $full_name = $first_name . ' ' . $last_name;
+    } else {
+        // If the learner object is not in the session, redirect to the login page
+        echo 'errroor';
+    }
+    ?>
     <nav class="navbar navbar-light navbar-expand-md py-3 navbg fixed-top">
         <div class="container"><a class="navbar-brand d-flex align-items-center" href="trainings.php"><span class="bs-icon-sm bs-icon-rounded bs-icon-primary d-flex justify-content-center align-items-center me-2 bs-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-text-indent-left" style="padding-right: 0px;margin-right: 0px;font-size: 27px;">
                         <path d="M2 3.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm.646 2.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L4.293 8 2.646 6.354a.5.5 0 0 1 0-.708zM7 6.5a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h6a.5.5 0 0 1 0 1h-6a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"></path>
@@ -63,7 +74,7 @@ if ($stmt->rowCount() > 0) {
                         <div class="dropdown-menu"><a class="dropdown-item" href="recents.php"><i class="fa fa-spinner fa-fw"></i>Recents</a><a class="dropdown-item" href="archive.php"><i class="fa fa-archive fa-fw"></i>Archieve</a></div>
                     </li>
                 </ul>
-                <div class="dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small">hussein bouik</span><img class="border rounded-circle img-profile" src="assets/img/avatars/avatar5.jpeg" width="62" height="62"></a>
+                <div class="dropdown no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><span class="d-none d-lg-inline me-2 text-gray-600 small"><?php echo $full_name; ?></span><img class="border rounded-circle img-profile" src="assets/img/avatars/avatar5.jpeg" width="62" height="62"></a>
                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in"><a class="dropdown-item" href="profile.php"><i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Profile</a><a class="dropdown-item" href="#"><i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Settings</a><a class="dropdown-item" href="#"><i class="fas fa-list fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Activity log</a>
                         <div class="dropdown-divider"></div><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>&nbsp;Logout</a>
                     </div>
@@ -77,35 +88,47 @@ if ($stmt->rowCount() > 0) {
             <div class="card-header py-3">
                 <p class="text-primary m-0 fw-bold">User Settings</p>
             </div>
+            <?php if (isset($success_update)): ?>
+    <div class="alert alert-success mx-auto w-75 h-25 text-center"><?php echo $success_update; ?></div>
+<?php endif; ?>
+            <?php if (isset($false_current_password)): ?>
+    <div class="alert alert-danger mx-auto w-75 h-25 text-center"><?php echo $false_current_password; ?></div>
+    <?php endif; ?>
             <div class="card-body">
-                <form>
+                <form action="updateprofil.php" method="post" id="form" class="form" enctype="multipart/form-data">
                     <div class="row" style="margin-bottom: 25px;text-align: left;">
                         <div class="col-sm-4 col-md-4 col-lg-3 col-xl-2 col-xxl-2" style="display: inline;text-align: center;margin-bottom: 25px;"><img class="rounded-circle mb-3 mt-4 img-fluid" src="assets/img/dogs/image2.jpeg" style="display: inline;max-height: 110px;" width="98" height="110"><br></div>
                         <div class="col-sm-8 col-md-8 col-lg-9 col-xl-10 col-xxl-10 align-self-center">
                             <div class="row">
                                 <div class="col-md-12 text-start">
-                                    <div class="mb-3"><label class="form-label" for="email"><strong>Email Address</strong></label><input class="form-control" type="email" id="email" placeholder="user@example.com" name="email" required=""></div>
+                                    <div class="mb-3 form-group"><label class="form-label" for="email"><strong>Email Address</strong></label><input class="form-control" type="email" value="<?php echo $email; ?>" id="Email" placeholder="user@example.com" name="email" required=""> <small>Error message</small></div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 text-start">
-                            <div class="mb-3"><label class="form-label" for="username"><strong>Password</strong></label><input class="form-control" type="password" id="password" placeholder="Password"></div>
-                        </div>
-                        <div class="col-md-6 text-start">
-                            <div class="mb-3"><label class="form-label" for="username"><strong>Confirm Password</strong></label><input class="form-control" type="password" id="verifyPassword" placeholder="Password"></div>
+                        <div class="col-md-6">
+                            <div class="mb-3 form-group"><label class="form-label" for="first_name"><strong>First Name</strong></label><input class="form-control"  id="firstname" type="text" value="<?php echo $first_name; ?>" placeholder="John" name="first_name" required=""> <small>Error message</small></div>
                         </div>
                         <div class="col-md-6">
-                            <div class="mb-3"><label class="form-label" for="first_name"><strong>First Name</strong></label><input class="form-control" type="text" placeholder="John" name="first_name" required=""></div>
+                            <div class="mb-3 form-group"><label class="form-label" for="last_name"><strong>Last Name</strong></label><input class="form-control" id="lastname" type="text" value="<?php echo $last_name; ?>" placeholder="Doe" name="last_name" required=""> <small>Error message</small></div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="mb-3"><label class="form-label" for="last_name"><strong>Last Name</strong></label><input class="form-control" type="text" placeholder="Doe" name="last_name" required=""></div>
+                        <div class="col-md-6 text-start">
+                            <div class="mb-3 form-group"><label class="form-label" for="username"><strong>Current Password</strong></label><input class="form-control"  type="password" id="CurrentPassword" name="current_password" placeholder="Current Password"> <small>Error message</small></div>
                         </div>
+                        <div class="col-md-6 text-start">
+                            <div class="mb-3 form-group"><label class="form-label" for="username"><strong>Password</strong></label><input class="form-control" type="password" id="Password" name="new_password" placeholder="New Password"> <small>Error message</small></div>
+                        </div>
+  
+                        <div class="col-md-6 text-start">
+                            <div class="mb-3 form-group"><label class="form-label" for="username"><strong>Confirm Password</strong></label><input class="form-control"  type="password" id="ConfirmPassword" placeholder="Confirm Password"> <small>Error message</small></div>
+                        </div>
+
                         <div class="col">
                             <p id="emailErrorMsg" class="text-danger" style="display: none;"></p>
                             <p id="passwordErrorMsg" class="text-danger" style="display: none;"></p>
                         </div>
                     </div>
-                </form><button class="btn btn-primary btn-sm" id="submitBtn" type="submit" style="background-color: #d190e2;border: none;">Save Settings</button>
+                    <button class="btn btn-primary btn-sm" id="submitBtn" type="submit" style="background-color: #d190e2;border: none;">Save Settings</button>
+                </form>
             </div>
         </div>
     </div>
@@ -160,9 +183,9 @@ if ($stmt->rowCount() > 0) {
             </div>
         </div>
     </footer>
-
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/js/bs-init.js"></script>
+    <script src="assets/js/editprofil.js"></script>
     <script src="https://geodata.solutions/includes/countrystate.js"></script>
 </body>
 
