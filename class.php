@@ -258,7 +258,7 @@ class Learner {
         header("Location: profile.php"); 
 
         }else{
-            unset($_SESSION['false_current_password']);
+            
             $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
     
             // Prepare the SQL query to update data in the Learner table
